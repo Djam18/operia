@@ -1,0 +1,6 @@
+ID Client;Nom;Pays;Région;Devise;Contact;Email;Plafond Encours;Litige En Cours;Motif Litige
+cust-1;Nova Conseil;France;Europe;EUR;Jean Nova;compta@novaconseil.fr;100000.0;NON;
+cust-2;Atelier N7;France;Europe;EUR;Claire Monet;finance@atelier-n7.com;25000.0;NON;
+cust-ci-1;SOTRA Logistique Abidjan;Côte d'Ivoire;Afrique de l'Ouest;XOF;Amadou Koné;recouvrement@sotra-ci.com;50000000.0;NON;
+cust-ma-1;Casablanca Tech Solutions;Maroc;Afrique du Nord;MAD;Mehdi Bennani;finance@casatech.ma;500000.0;NON;
+cust-ml-1;Mali Coton Agro;Mali;Afrique de l'Ouest;XOF;Ibrahim Traoré;contact@malicoton.ml;20000000.0;OUI;Contestation sur le bon de livraison CMD-2026-084
