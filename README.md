@@ -1,135 +1,180 @@
-# OpérIA — Agent IA d'Opérations Métier
+# OpérIA — Enterprise Operations & Financial Copilot AI Agent
 
-> **Stack :** Python 3.12 · FastAPI · MCP (Model Context Protocol) · Vue 3 / Nuxt · TypeScript · Tailwind CSS · SQLite / PostgreSQL
+> **Tool-calling AI Agent (MCP) capable of querying high-volume enterprise data in natural language and staging sensitive business operations (dunning reminders, qualified exports, executive summaries) with systematic Human-in-the-Loop (HITL) validation before execution.**
 
-OpérIA est un agent outillé (*tool-calling agent*) capable d’interroger des données métier volumineuses en langage naturel et de préparer des actions complexes (relances financières, exports qualifiés, résumés stratégiques), avec **validation humaine systématique (Human-In-The-Loop — HITL)** avant toute action sensible.
-
----
-
-## 🌍 Contexte Multi-Régions & International (Afrique & Europe)
-
-OpérIA a été conçu pour opérer dans des contextes d'entreprises panafricaines et internationales :
-- **Afrique de l'Ouest (UEMOA / CEDEAO) :** Hubs d'Abidjan, Dakar, Bamako (Devise : FCFA / XOF) — *Ex: SOTRA Logistique, Cacao Ivoire Export, Sahel Telecom*.
-- **Afrique du Nord (Maghreb) :** Casablanca, Tanger, Tunis (Devise : MAD / Dirham, TND) — *Ex: Casablanca Tech Solutions, Tanger Med Logistique*.
-- **Afrique Centrale (CEMAC) :** Douala, Libreville (Devise : FCFA / XAF) — *Ex: Douala Shipping Agency*.
-- **Afrique de l'Est & Anglophone :** Nairobi, Lagos (Devise : KES, NGN, USD) — *Ex: Nairobi Mobile Pay*.
-- **Europe / International :** Paris, Lyon, Bruxelles (Devise : EUR) — *Ex: Nova Conseil, Atelier N7, Groupe Atlas*.
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Vue 3](https://img.shields.io/badge/Vue.js-3.4+-4FC08D.svg?logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4+-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33.svg?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](docs/LICENSE.md)
 
 ---
 
-## ⚡ Solution de Performance : Zéro Traitement Lourd Inutile
+## 📸 System Overview & Visual Walkthrough
 
-Charger des dizaines de milliers de lignes brutes dans le contexte d'un LLM ou en mémoire Python est une mauvaise pratique (lenteur, saturation mémoire, coûts excessifs).
+### 1. Executive Dashboard
+Real-time operational dashboard providing bird's-eye visibility over outstanding balances, overdue aging brackets, critical recovery alerts, cashflow recovery projections, and pending HITL approval tasks.
 
-**L'architecture OpérIA résout ce problème par :**
-1. **Pushdown SQL direct au niveau de la base :**
-   - Index composites b-tree sur `(status, days_overdue)`, `(region, currency)` et `(customer_id)`.
-   - Les requêtes et agrégations statistiques sur **plus de 12 500 factures** s'exécutent en **moins de 15 millisecondes** !
-2. **Synthèse statistique de haut niveau pour l'agent :**
-   - L'outil MCP calcule les montants agrégés par devise et isole les 5 créances les plus critiques.
-   - L'agent reçoit un JSON compact et formule une réponse instantanée et claire sans latence.
+![OpérIA Executive Dashboard](docs/screenshots/01_dashboard.png)
 
 ---
 
-## 🛠️ Architecture Seamless Dual-Mode (Local & En Ligne)
+### 2. Conversational Copilot & Multi-Turn Thread History
+Natural language conversational interface featuring full conversation persistence, real-time search, multi-turn context retention, transparent MCP tool execution traces (`crm.invoices.query`, `crm.comptes.enrich`), tabular breakdowns, and contextual prompt suggestions.
 
-1. **Mode Local / Hors-ligne (par défaut) :**
-   - Fonctionne à 100 % hors-ligne avec la base SQLite embarquée et le moteur agentique réactif déterministe.
-   - Zéro dépendance à internet, idéal pour les démonstrations immédiates.
-2. **Mode En Ligne (Cloud Ready) :**
-   - En renseignant `GEMINI_API_KEY` ou `RESEND_API_KEY` dans `backend/.env`, l'agent bascule automatiquement sur les modèles cloud et l'envoi d'emails réels aux clients.
-   - En cas de perte de réseau ou dépassement de quota, le système bascule sur le mode local sans planter.
+![Conversational Copilot Interface](docs/screenshots/02_agent_chat.png)
 
 ---
 
-## 🚀 Démarrage Rapide
+### 3. Human-In-The-Loop (HITL) Staged Action Guardrails
+The agent never executes state-altering or financial actions unilaterally. Instead, it generates structured **Staged Actions** detailing recipients, amounts, dispute context, and email templates—requiring explicit human validation or refusal before reaching the dispatch outbox.
 
-### 1. Démarrer le Backend (FastAPI)
+![Human-In-The-Loop Staged Action](docs/screenshots/03_hitl_action_card.png)
+
+---
+
+### 4. Operations Outbox & Immutable Audit Trail
+Central control panel for staged, queued, and completed operations (dunning notices, certified CSV exports, credit line adjustments). Operators can inspect action payloads, execute batch approvals, and review immutable audit logs.
+
+![Operations Outbox and Audit](docs/screenshots/04_operations.png)
+
+---
+
+### 5. Financial Intelligence & Recovery Analytics
+Interactive analytical dashboards featuring Pareto 80/20 recovery distribution, Days Sales Outstanding (DSO) tracking, cashflow forecasting, and granular geographic/currency exposure charts.
+
+![Financial Analytics and DSO](docs/screenshots/05_analytics.png)
+
+---
+
+### 6. Administration Backoffice & System Health
+Enterprise governance center providing operational guardrails (batch size limits, autonomous action thresholds), queue telemetry (Redis / In-Memory), model routing configuration (Gemini / Claude / Local), and an automated circuit breaker.
+
+![Admin Backoffice and System Health](docs/screenshots/06_admin_health.png)
+
+---
+
+## 🌍 Multi-Region & International Currency Support
+
+OpérIA is built to handle heterogeneous, multi-currency invoicing across African and European commercial hubs:
+- **West Africa (WAEMU / ECOWAS):** Abidjan, Dakar, Bamako (Currency: `FCFA / XOF`) — *e.g., SOTRA Logistique, Cacao Ivoire Export, Sahel Telecom*.
+- **North Africa (Maghreb):** Casablanca, Tangier, Tunis (Currency: `MAD / Dirham`, `TND`) — *e.g., Casablanca Tech Solutions, Tanger Med Logistique*.
+- **Central Africa (CEMAC):** Douala, Libreville (Currency: `FCFA / XAF`) — *e.g., Douala Shipping Agency*.
+- **East Africa & Anglophone Markets:** Nairobi, Lagos (Currency: `KES`, `NGN`, `USD`) — *e.g., Nairobi Mobile Pay*.
+- **Europe & Global:** Paris, Lyon, Brussels (Currency: `EUR`) — *e.g., Nova Conseil, Atelier N7, Groupe Atlas*.
+
+---
+
+## ⚡ High-Performance Architecture: Direct SQL Pushdown (< 15ms)
+
+Streaming tens of thousands of raw database rows into an LLM context window or Python memory is an anti-pattern (causes latency spikes, token exhaustion, and inflated inference costs).
+
+**OpérIA solves this through intelligent query offloading:**
+1. **Direct Database-Level SQL Pushdown:**
+   - Composite B-tree indexes on `(status, days_overdue)`, `(region, currency)`, and `(customer_id)`.
+   - Aggregation and ranking queries over **12,500+ invoices** execute in **less than 15 milliseconds**.
+2. **Compact Statistical Synthesis for the LLM:**
+   - The MCP tool summarizes aggregated amounts by currency and extracts the top 5 critical debtor accounts.
+   - The agent receives a lightweight JSON payload and formulates an instantaneous, hallucination-free response.
+
+---
+
+## 🛠️ Seamless Dual-Mode Architecture (Local & Cloud)
+
+1. **Local / Offline Mode (Default):**
+   - 100% functional out-of-the-box using the embedded SQLite database and a deterministic reactive agent engine.
+   - Requires zero external API keys, making it ideal for isolated enterprise deployments and instant demos.
+2. **Cloud-Ready Online Mode:**
+   - By specifying `GEMINI_API_KEY` or `RESEND_API_KEY` in `backend/.env`, the system activates cloud LLM inference and live email dispatch.
+   - Integrated **Circuit Breaker** automatically falls back to local execution without downtime if network loss or rate limiting occurs.
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- Python 3.12+
+- Node.js 20+ & pnpm / npm
+- Google Chrome (installed on system for Playwright E2E testing)
+
+### 1. Launch Backend (FastAPI)
 ```bash
 cd backend
-# Activer l'environnement virtuel existant
 source .venv/bin/activate
-# Lancer le serveur API sur le port 8000
 uvicorn app.main:app --reload --port 8000
 ```
-- API Docs Swagger : [http://localhost:8000/docs](http://localhost:8000/docs)
-- Santé API : [http://localhost:8000/health](http://localhost:8000/health)
+- Swagger Interactive API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Health Check Endpoint: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 2. Démarrer le Frontend (Vite / TypeScript)
+### 2. Launch Frontend (Vite / TypeScript)
 ```bash
 cd frontend
-# Lancer le serveur de développement sur le port 3000
-npx vite --port 3000
+pnpm dev # or npx vite --port 3000
 ```
-- Interface OpérIA : [http://localhost:3000/](http://localhost:3000/)
-- Console Sombre Atlas : [http://localhost:3000/console](http://localhost:3000/console)
+- Web Application: [http://localhost:3000/](http://localhost:3000/)
+- Demo Credentials: `admin@operia.io` / `admin123`
 
 ---
 
-## 🧪 Exécution des Tests
+## 🧪 Comprehensive Automated Testing Suite
 
-## 🧪 Exécution des Tests
-
-### 1. Tests Backend (Pytest) : 13/13 Réussis
+### 1. Backend Testing (Pytest) — 27/27 Passing
 ```bash
 cd backend
 source .venv/bin/activate
-# Tests API + Évaluation IA (Zéro-hallucination, HITL, Latence)
 pytest -v
 ```
-- `tests/test_api.py` (8 tests) : santé, sources, listing, validation HITL, refus, validation en lot, streaming SSE.
-- `tests/test_agent_evals.py` (5 tests) : sélection d'outils, zéro-hallucination sur chiffres réels, garde-fou HITL obligatoire, résistance aux injections, SLA latence < 250ms sur 12 500+ lignes.
+- `tests/test_api.py`: Health checks, data source status, invoice queries, HITL validation, rejection flows, batch operations, and SSE streaming.
+- `tests/test_admin_and_versioning.py`: Configuration management, circuit breaker states, queue metrics, and immutable audit logs.
+- `tests/test_agent_evals.py`: Tool selection accuracy, zero hallucination on numeric values, mandatory HITL enforcement, prompt injection resistance, and < 250ms SLA verification across 12,500+ records.
 
-### 2. Tests Frontend Unitaires & Composants (Vitest + TypeScript)
+### 2. Frontend Unit & Component Testing (Vitest) — 45/45 Passing
 ```bash
 cd frontend
 npx vitest run
 ```
-*Vérifie le store réactif Pinia, le composant de garde-fou `StagedActionCard` et les traces d'outils `ToolExecutionBadge`.*
+*Validates Pinia stores, `StagedActionCard` state mutations, `ChatMessageBubble` rendering, `ConversationSidebar` search/filtering, multi-currency formatting, and internationalization (EN/FR).*
 
-### 3. Contrôle Strict TypeScript
-```bash
-cd frontend
-npx vue-tsc --noEmit
-```
-
-### 4. Tests E2E Complets (Playwright)
+### 3. End-to-End Testing (Playwright) — 2/2 Passing
 ```bash
 cd frontend
 npx playwright test
 ```
-*Utilise directement le navigateur Google Chrome système global (`/usr/bin/google-chrome`), sans aucun téléchargement supplémentaire, et orchestre automatiquement Backend FastAPI et Frontend Vite.*
+*Runs against the global system Google Chrome (`/usr/bin/google-chrome`), testing the complete user journey: authentication, dashboard KPI inspection, conversational queries, thread switching, search filtering, and HITL action approval.*
 
 ---
 
-## 📁 Structure du Projet
+## 📁 Repository Structure
 
 ```
 ai agent/
 ├── backend/
 │   ├── app/
-│   │   ├── api/endpoints.py          # Routes REST et streaming SSE
-│   │   ├── core/config.py            # Configuration et détection de mode
-│   │   ├── db/
-│   │   │   ├── database.py           # Moteur async SQLAlchemy
-│   │   │   ├── models.py             # Modèles SQL avec indexations performantes
-│   │   │   └── seed.py               # Générateur de 12 500+ factures Afrique & Europe
-│   │   ├── mcp/tools.py              # Outils MCP optimisés (<15ms)
-│   │   └── services/
-│   │       ├── agent_service.py      # Moteur d'orchestration de l'agent
-│   │       └── operations_service.py # Service de validation et audit HITL
-│   ├── tests/test_api.py             # Suite de tests Pytest (8 tests)
+│   │   ├── admin.py                  # Admin backoffice & health telemetry
+│   │   ├── api/endpoints.py          # REST endpoints & SSE streaming
+│   │   ├── core/                     # Auth, cache, config, queue
+│   │   ├── db/                       # SQLAlchemy async engine, models, seed (12,500+ invoices)
+│   │   ├── mcp/tools.py              # Optimized MCP tools (< 15ms)
+│   │   └── services/                 # Agent service & operations service (HITL)
+│   ├── tests/                        # Pytest suites (unit, admin, agent evals)
 │   └── pyproject.toml
 ├── frontend/
 │   ├── src/
-│   │   ├── types/index.ts            # Interfaces TypeScript strictes
-│   │   ├── stores/agent.ts           # Store Pinia typé
-│   │   ├── router/index.ts           # Vue Router typé
-│   │   ├── components/               # Composants UI (ActionCard, ToolBadge, Sidebar)
-│   │   └── views/                    # 6 vues opérationnelles + Console Atlas
-│   ├── tests/                        # Tests Vitest & Playwright
-│   ├── package.json
-│   └── tsconfig.json
-├── docs/                             # Documentation complète (PRD, SRS, Sécurité, etc.)
-└── docker-compose.yml
+│   │   ├── components/               # Modular Vue 3 components (< 150 lines)
+│   │   │   ├── agent/                # Conversation sidebar, chat bubbles, HITL action cards
+│   │   │   ├── admin/                # Health cards, guardrails, model routing
+│   │   │   ├── analytics/            # Pareto, DSO, cashflow charts
+│   │   │   └── ui/                   # Reusable design system (buttons, inputs, tables, dialogs)
+│   │   ├── composables/              # useAgentChat, useAnalytics, useI18n
+│   │   ├── stores/                   # Typed Pinia stores (admin, agent, auth)
+│   │   └── views/                    # Dashboard, Agent, Operations, Analytics, Admin views
+│   ├── tests/                        # Vitest unit/component specs & Playwright E2E
+│   └── playwright.config.ts
+├── docs/                             # Engineering & architectural documentation (PRD, SRS, etc.)
+│   └── screenshots/                  # High-resolution screenshots captured via Playwright
+├── .github/workflows/ci.yml          # GitHub Actions multi-tier CI/CD workflow
+├── .gitattributes                    # Cross-platform line ending normalization & diff drivers
+└── docker-compose.yml                # Multi-service container orchestration
 ```
